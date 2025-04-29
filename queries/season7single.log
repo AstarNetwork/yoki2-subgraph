@@ -1,0 +1,21 @@
+query season7single {
+    transferSingles(
+      where: {
+        to: "0xc779ceb0853fa7ab6a38c587c1cfc702e4603d9b",
+        from: "0x0000000000000000000000000000000000000000",
+        internal_id_gt: "99",
+        internal_id_lt: "402"
+      },
+      first: 100,
+      orderBy: blockTimestamp,
+      orderDirection: desc
+    ) {
+      to
+      from
+      internal_id
+    }
+  }
+
+
+
+https://api.studio.thegraph.com/query/64002/yoki2/v0.0.3/graphql?query=query+season7single+%7B%0A++transferSingles%28%0A++++where%3A+%7B%0A++++++to%3A+%220xc779ceb0853fa7ab6a38c587c1cfc702e4603d9b%22%2C%0A++++++from%3A+%220x0000000000000000000000000000000000000000%22%2C%0A++++++internal_id_gt%3A+%2299%22%2C%0A++++++internal_id_lt%3A+%22402%22%0A++++%7D%2C%0A++++first%3A+100%2C%0A++++orderBy%3A+blockTimestamp%2C%0A++++orderDirection%3A+desc%0A++%29+%7B%0A++++to%0A++++from%0A++++internal_id%0A++%7D%0A%7D%0A
