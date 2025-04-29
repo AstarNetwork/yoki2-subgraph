@@ -10,7 +10,7 @@ const { printSchema } = require('graphql');
 async function startServer() {
   try {
     // Load the schema
-    const schema = await loadSchema(path.join(__dirname, '../.graphclient/schema.graphql'), {
+    const schema = await loadSchema(path.join(__dirname, '../schema.graphql'), {
       loaders: [new GraphQLFileLoader()]
     });
 
@@ -28,7 +28,15 @@ async function startServer() {
 
     // Create resolvers with error handling
     const resolvers = {
-      Query: {}
+      Query: {},
+      // Add the _Meta_ type resolver
+      _Meta_: {
+        hasIndexingErrors: () => false,
+        block: () => ({
+          number: 5610918,
+          hash: "0x409c9cea7bddf512165e61985ded0dea3ad33b21dba2521daaecc9a73ca681dd"
+        })
+      }
     };
 
     queryFieldNames.forEach(fieldName => {
@@ -37,6 +45,17 @@ async function startServer() {
           // Add subgraphError: allow to all queries
           if (args && !args.subgraphError) {
             args.subgraphError = 'allow';
+          }
+
+          // Special handling for _meta field
+          if (fieldName === '_meta') {
+            return {
+              hasIndexingErrors: false,
+              block: {
+                number: 5610918,
+                hash: "0x409c9cea7bddf512165e61985ded0dea3ad33b21dba2521daaecc9a73ca681dd"
+              }
+            };
           }
 
           let result = [];
@@ -71,7 +90,7 @@ async function startServer() {
               operator: '0xoperator',
               from: '0x0000000000000000000000000000000000000000',
               to: '0xc779ceb0853fa7ab6a38c587c1cfc702e4603d9b',
-              internal_id: '100',
+              tokenId: '100',
               value: '1',
               blockNumber: '5610918',
               blockTimestamp: '1619712000',

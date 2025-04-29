@@ -284,7 +284,7 @@ import {
     entity.operator = event.params.operator
     entity.from = event.params.from
     entity.to = event.params.to
-    entity.internal_id = event.params.id
+    entity.tokenId = event.params.id
     entity.value = event.params.value
 
     entity.blockNumber = event.block.number
@@ -321,7 +321,7 @@ import {
   export function handleURI(event: URIEvent): void {
     let entity = new URI(event.transaction.hash.concatI32(event.logIndex.toI32()))
     entity.value = event.params.value
-    entity.internal_id = event.params.id
+    entity.tokenId = event.params.id
 
     entity.blockNumber = event.block.number
     entity.blockTimestamp = event.block.timestamp

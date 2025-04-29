@@ -1,3 +1,0 @@
-{
-  "7b024e9d48cf2a550ef0e782b3a1c21f1f8d2a783577c52c48069091e788b75f": "query season7single {\n  transferSingles(\n    where: {to: \"0xc779ceb0853fa7ab6a38c587c1cfc702e4603d9b\", from: \"0x0000000000000000000000000000000000000000\", internal_id_gt: \"99\", internal_id_lt: \"402\"}\n    first: 100\n    orderBy: blockTimestamp\n    orderDirection: desc\n  ) {\n    to\n    from\n    internal_id\n  }\n}"
-}
