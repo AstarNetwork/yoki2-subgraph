@@ -1,0 +1,20 @@
+query checkAddressSeason7Conditions {
+  season7Conditions(
+    where: {
+      address: "0xc779ceb0853fa7ab6a38c587c1cfc702e4603d9b"
+    }
+  ) {
+    id
+    address
+    hasAllRequiredTokens
+    token100Balance
+    token101Balance
+    token200Balance
+    token201Balance
+    token300Balance
+    token301Balance
+    token400Balance
+    token401Balance
+    lastUpdated
+  }
+}

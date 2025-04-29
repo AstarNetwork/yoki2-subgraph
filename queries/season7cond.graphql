@@ -1,0 +1,20 @@
+query checkSeason7Conditions {
+  season7Conditions(
+    first: 100,
+    orderBy: lastUpdated,
+    orderDirection: desc
+  ) {
+    id
+    address
+    hasAllRequiredTokens
+    token100Balance
+    token101Balance
+    token200Balance
+    token201Balance
+    token300Balance
+    token301Balance
+    token400Balance
+    token401Balance
+    lastUpdated
+  }
+}

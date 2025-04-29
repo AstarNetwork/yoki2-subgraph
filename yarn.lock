@@ -599,7 +599,7 @@
     "@graphql-tools/utils" "^10.0.0"
     tslib "^2.4.0"
 
-"@graphprotocol/client-cli@latest":
+"@graphprotocol/client-cli@^3.0.7":
   version "3.0.7"
   resolved "https://registry.yarnpkg.com/@graphprotocol/client-cli/-/client-cli-3.0.7.tgz#f754934c5fcfe015968b9550ce4da79eb12e122c"
   integrity sha512-Y+VRUGV1KOm4gmQyk2kROqvImyWC9o6VHzXxlzSTxAkxh1OsbKBeG8StjnscE/cjlUVJX8CmKkBwI5527pydAA==

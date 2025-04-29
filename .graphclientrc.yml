@@ -2,8 +2,9 @@ sources:
   - name: yoki2
     handler:
       graphql:
-        schema: ./schema.graphql
-        subgraphError: allow
+        endpoint: http://localhost:8000/subgraphs/name/yoki2
+schema:
+  file: ./schema.graphql
 
 documents:
-  - ./queries/season.graphql
+  - ./queries/*.graphql
