@@ -14,6 +14,7 @@ type Upgraded @entity(immutable: true) {
   blockTimestamp: BigInt!
   transactionHash: Bytes!
 }
+
 type ApprovalForAll @entity(immutable: true) {
   id: Bytes!
   account: Bytes! # address
@@ -26,7 +27,6 @@ type ApprovalForAll @entity(immutable: true) {
 
 type ContractURIUpdated @entity(immutable: true) {
   id: Bytes!
-
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -117,4 +117,28 @@ type Unpaused @entity(immutable: true) {
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
+}
+
+# New entities for tracking token balances and season condition
+type TokenBalance @entity(immutable: true) {
+  id: ID! # Format: {address}-{tokenId}
+  owner: Bytes! # address
+  tokenId: BigInt!
+  balance: BigInt!
+  lastUpdated: BigInt!
+}
+
+type Season7Condition @entity(immutable: true) {
+  id: ID! # This will be the user's address
+  address: Bytes! # address
+  hasAllRequiredTokens: Boolean!
+  token100Balance: BigInt!
+  token101Balance: BigInt!
+  token200Balance: BigInt!
+  token201Balance: BigInt!
+  token300Balance: BigInt!
+  token301Balance: BigInt!
+  token400Balance: BigInt!
+  token401Balance: BigInt!
+  lastUpdated: BigInt!
 }

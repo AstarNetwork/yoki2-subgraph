@@ -1,0 +1,17 @@
+query season7single {
+    transferSingles(
+      where: {
+        to: "0xc779ceb0853fa7ab6a38c587c1cfc702e4603d9b",
+        from: "0x0000000000000000000000000000000000000000",
+        internal_id_gt: "99",
+        internal_id_lt: "402"
+      },
+      first: 100,
+      orderBy: blockTimestamp,
+      orderDirection: desc
+    ) {
+      to
+      from
+      internal_id
+    }
+  }

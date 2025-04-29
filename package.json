@@ -8,11 +8,20 @@
     "create-local": "graph create --node http://localhost:8020/ yoki2",
     "remove-local": "graph remove --node http://localhost:8020/ yoki2",
     "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 yoki2",
-    "test": "graph test"
+    "test": "graph test",
+    "client-init": "graphclient init",
+    "client-build": "graphclient build",
+    "client-serve": "node scripts/serve.js"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.97.0",
     "@graphprotocol/graph-ts": "0.37.0"
   },
-  "devDependencies": { "matchstick-as": "0.6.0" }
+  "devDependencies": {
+    "@graphprotocol/client-cli": "latest",
+    "@graphql-tools/graphql-file-loader": "^8.0.19",
+    "@graphql-tools/load": "^8.1.0",
+    "@graphql-yoga/node": "^3.9.1",
+    "graphql": "^16.5.0"
+  }
 }

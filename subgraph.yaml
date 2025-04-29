@@ -76,4 +76,4 @@ dataSources:
           handler: handleURI
         - event: Unpaused(address)
           handler: handleUnpaused
-      file: ./src/yoki-impl-at-proxy.ts
+      file: ./src/YokiImplAtProxy.ts

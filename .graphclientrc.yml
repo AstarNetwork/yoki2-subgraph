@@ -1,0 +1,8 @@
+# .graphclientrc.yml
+sources:
+  - name: yoki2
+    handler:
+      graphql:
+        endpoint: https://api.studio.thegraph.com/query/64002/yoki2/version/latest
+documents:
+  - ./queries/season.graphql
