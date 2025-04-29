@@ -28,12 +28,12 @@ dataSources:
           handler: handleUpgraded
       file: ./src/yokis-2.ts
   - kind: ethereum
-    name: YokiImpl
+    name: YokiImplAtProxy
     network: soneium
     source:
-      address: "0xADb62c3a9F2c27f6187E24874610981449da4FA9"
-      abi: YokiImpl
-      startBlock: 5610913
+      address: "0x80E041b16a38f4caa1d0137565B37FD71b2f1E2b"  # Proxy address
+      abi: YokiImpl  # Implementation ABI
+      startBlock: 5610917
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.9
@@ -76,4 +76,4 @@ dataSources:
           handler: handleURI
         - event: Unpaused(address)
           handler: handleUnpaused
-      file: ./src/yoki-impl.ts
+      file: ./src/yoki-impl-at-proxy.ts
