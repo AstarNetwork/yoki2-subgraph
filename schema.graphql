@@ -119,7 +119,7 @@ type Unpaused @entity(immutable: true) {
   transactionHash: Bytes!
 }
 
-type TokenBalance @entity(immutable: true) {
+type TokenBalance @entity(immutable: false) {
   id: String! # composite key: {owner}-{tokenId}
   owner: Bytes! # address
   tokenId: BigInt!
@@ -127,7 +127,7 @@ type TokenBalance @entity(immutable: true) {
   lastUpdated: BigInt!
 }
 
-type Season7Conditions @entity(immutable: true) {
+type Season7Conditions @entity(immutable: false) {
   id: Bytes! # address as id
   address: Bytes! # address
   hasAllRequiredTokens: Boolean!
