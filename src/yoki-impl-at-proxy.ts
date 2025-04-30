@@ -63,12 +63,18 @@ import {
   }
   
   function updateSeason7Conditions(address: string, blockTimestamp: BigInt): void {
+    // check cut off time for season 7
+    const cutOffTime = BigInt.fromI32(1746104400); // Example cut-off time (in seconds)
+    if (blockTimestamp.gt(cutOffTime)) {
+      return;
+    }
+
     const addressBytes = addressToBytes(address);  // Convert once and reuse
-    let conditions = Season7Conditions.load(addressBytes);  // Use Bytes for ID
-    
+    let conditions = Season7Conditions.load(addressBytes);  
+
     if (!conditions) {
-      conditions = new Season7Conditions(addressBytes);  // Use Bytes for ID
-      conditions.address = addressBytes;  // Use Bytes for address field
+      conditions = new Season7Conditions(addressBytes);  
+      conditions.address = addressBytes;  
       conditions.hasAllRequiredTokens = false;
       conditions.token100Balance = ZERO_BI;
       conditions.token101Balance = ZERO_BI;
