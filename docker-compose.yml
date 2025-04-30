@@ -20,7 +20,7 @@ services:
       postgres_db: graph-node
       ipfs: "ipfs:5001"
       ethereum: "soneium:https://rpc.soneium.org"
-
+      GRAPH_NODE_HOST: 0.0.0.0
       GRAPH_LOG: info
       ETHEREUM_POLLING_INTERVAL: 1000
       # Uncomment to enable IPFS file API for file data sources
@@ -49,5 +49,7 @@ services:
       POSTGRES_PASSWORD: let-me-in
       POSTGRES_DB: graph-node
       PGDATA: "/data/postgres"
+      POSTGRES_INITDB_ARGS: "-E UTF8 --locale=C"
+
     volumes:
       - ./data/postgres:/data/postgres

@@ -1,0 +1,23 @@
+query checkSeason7Conditions {
+  season7Conditions_collection(
+      where: {
+      hasAllRequiredTokens: true
+    }
+    first: 1000,
+    orderBy: lastUpdated,
+    orderDirection: desc
+  ) {
+    id
+    address
+    hasAllRequiredTokens
+    token100Balance
+    token101Balance
+    token200Balance
+    token201Balance
+    token300Balance
+    token301Balance
+    token400Balance
+    token401Balance
+    lastUpdated
+  }
+}
