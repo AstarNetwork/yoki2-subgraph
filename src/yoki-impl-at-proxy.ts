@@ -25,7 +25,7 @@ import {
     Unpaused,
   } from "../generated/schema"
   import { BigInt, store, Bytes, Address } from "@graphprotocol/graph-ts"
-  import { TokenBalance, Season7Conditions } from "../generated/schema"
+  import { TokenBalance, Season7Condition } from "../generated/schema"
 
   const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
   const ZERO_BI = BigInt.fromI32(0);
@@ -49,20 +49,20 @@ import {
   function updateTokenBalance(owner: string, tokenId: BigInt, value: BigInt, blockTimestamp: BigInt): void {
     const id = owner + "-" + tokenId.toString();
     let tokenBalance = TokenBalance.load(id);
-    
+
     if (!tokenBalance) {
       tokenBalance = new TokenBalance(id);
       tokenBalance.owner = addressToBytes(owner);  // Convert string to Bytes
       tokenBalance.tokenId = tokenId;
       tokenBalance.balance = ZERO_BI;
     }
-    
+
     tokenBalance.balance = tokenBalance.balance.plus(value);
     tokenBalance.lastUpdated = blockTimestamp;
     tokenBalance.save();
   }
-  
-  function updateSeason7Conditions(address: string, blockTimestamp: BigInt): void {
+
+  function updateSeason7Condition(address: string, blockTimestamp: BigInt): void {
     // check cut off time for season 7
     const cutOffTime = BigInt.fromI32(1746104400); // Example cut-off time (in seconds)
     if (blockTimestamp.gt(cutOffTime)) {
@@ -70,11 +70,11 @@ import {
     }
 
     const addressBytes = addressToBytes(address);  // Convert once and reuse
-    let conditions = Season7Conditions.load(addressBytes);  
+    let conditions = Season7Condition.load(addressBytes);
 
     if (!conditions) {
-      conditions = new Season7Conditions(addressBytes);  
-      conditions.address = addressBytes;  
+      conditions = new Season7Condition(addressBytes);
+      conditions.address = addressBytes;
       conditions.hasAllRequiredTokens = false;
       conditions.token100Balance = ZERO_BI;
       conditions.token101Balance = ZERO_BI;
@@ -85,13 +85,13 @@ import {
       conditions.token400Balance = ZERO_BI;
       conditions.token401Balance = ZERO_BI;
     }
-    
+
     // Update token balances
     for (let i = 0; i < SEASON7_TOKENS.length; i++) {
       const tokenId = SEASON7_TOKENS[i];
       const balanceId = address + "-" + tokenId.toString();
       const tokenBalance = TokenBalance.load(balanceId);
-      
+
       if (tokenId.equals(BigInt.fromI32(100))) {
         conditions.token100Balance = tokenBalance ? tokenBalance.balance : ZERO_BI;
       } else if (tokenId.equals(BigInt.fromI32(101))) {
@@ -110,9 +110,9 @@ import {
         conditions.token401Balance = tokenBalance ? tokenBalance.balance : ZERO_BI;
       }
     }
-    
+
     // Check if user has all required tokens
-    conditions.hasAllRequiredTokens = 
+    conditions.hasAllRequiredTokens =
       conditions.token100Balance.gt(ZERO_BI) &&
       conditions.token101Balance.gt(ZERO_BI) &&
       conditions.token200Balance.gt(ZERO_BI) &&
@@ -121,7 +121,7 @@ import {
       conditions.token301Balance.gt(ZERO_BI) &&
       conditions.token400Balance.gt(ZERO_BI) &&
       conditions.token401Balance.gt(ZERO_BI);
-    
+
     conditions.lastUpdated = blockTimestamp;
     conditions.save();
   }
@@ -262,16 +262,16 @@ export function handleTransferSingle(event: TransferSingleEvent): void {
     const fromAddress = event.params.from.toHexString();
     const toAddress = event.params.to.toHexString();
     const zeroAddress = ZERO_ADDRESS;
-    
+
     // Handle minting (from = 0x0)
     if (fromAddress == zeroAddress) {
       updateTokenBalance(toAddress, event.params.id, event.params.value, event.block.timestamp);
-      updateSeason7Conditions(toAddress, event.block.timestamp);
-    } 
+      updateSeason7Condition(toAddress, event.block.timestamp);
+    }
     // Handle burning (to = 0x0)
     else if (toAddress == zeroAddress) {
       updateTokenBalance(fromAddress, event.params.id, event.params.value.neg(), event.block.timestamp);
-      updateSeason7Conditions(fromAddress, event.block.timestamp);
+      updateSeason7Condition(fromAddress, event.block.timestamp);
     }
     // Handle transfers
     else {

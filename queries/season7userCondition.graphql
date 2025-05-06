@@ -1,5 +1,5 @@
 query checkSeason7Conditions {
-  season7Conditions_collection(
+  season7Conditions(
       where: {
       hasAllRequiredTokens: true
       address: "0xc779ceb0853fa7ab6a38c587c1cfc702e4603d9b"
