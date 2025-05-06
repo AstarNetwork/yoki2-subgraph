@@ -127,7 +127,7 @@ type TokenBalance @entity(immutable: false) {
   lastUpdated: BigInt!
 }
 
-type Season7Conditions @entity(immutable: false) {
+type Season7Condition @entity(immutable: false) {
   id: Bytes! # address as id
   address: Bytes! # address
   hasAllRequiredTokens: Boolean!
