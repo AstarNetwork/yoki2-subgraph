@@ -1,1 +1,4 @@
 curl -X POST -H "Content-Type: application/json" -d '{"query": "yoki2"}' http://localhost:8000/graphql
+
+
+curl http://localhost:8000/graphql -X POST -d '{"query": "{ indexingStatusesForSubgraphName(subgraphName: \"yoki2\") { chains { network { name } latestBlock { number } chainHeadBlock { number } } synced health error { message } } }"}' -H "Content-Type: application/json"

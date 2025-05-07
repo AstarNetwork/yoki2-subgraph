@@ -2,7 +2,7 @@
 version: '3'
 services:
   graph-node:
-    image: graphprotocol/graph-node:v0.30.0
+    image: graphprotocol/graph-node:v0.33.0
     platform: linux/amd64  # Explicitly set platform
     ports:
       - '8000:8000'
