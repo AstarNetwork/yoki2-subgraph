@@ -25,7 +25,7 @@ import {
   Unpaused,
 } from "../generated/schema"
 import { BigInt, Bytes } from "@graphprotocol/graph-ts"
-import { TokenBalance } from "../generated/schema"
+import { AddressTokens } from "../generated/schema"
 
 // Import all helpers from the new file
 import {
@@ -34,7 +34,8 @@ import {
   updateSeason7Condition,
   updateSeason8Condition,
   updateSeason9Condition,
-  updateSeason10Condition
+  updateSeason10Condition,
+  SEASON7_TOKENS
 } from './season-helpers'
 
 const ZERO_BI = BigInt.fromI32(0);
@@ -45,20 +46,34 @@ function addressToBytes(address: string): Bytes {
   return Bytes.fromHexString(address);
 }
 
-function updateTokenBalance(owner: string, tokenId: BigInt, value: BigInt, blockTimestamp: BigInt): void {
-  const id = owner + "-" + tokenId.toString();
-  let tokenBalance = TokenBalance.load(id);
+// Add/remove tokens from an address's set
+function updateAddressTokens(address: string, tokenId: BigInt, adding: boolean, blockTimestamp: BigInt): void {
+  const addressBytes = addressToBytes(address);
+  let addressTokens = AddressTokens.load(addressBytes);
 
-  if (!tokenBalance) {
-    tokenBalance = new TokenBalance(id);
-    tokenBalance.owner = addressToBytes(owner);  // Convert string to Bytes
-    tokenBalance.tokenId = tokenId;
-    tokenBalance.balance = ZERO_BI;
+  if (!addressTokens) {
+    addressTokens = new AddressTokens(addressBytes);
+    addressTokens.ownedTokens = [];
   }
 
-  tokenBalance.balance = tokenBalance.balance.plus(value);
-  tokenBalance.lastUpdated = blockTimestamp;
-  tokenBalance.save();
+  let tokens = addressTokens.ownedTokens;
+
+  if (adding) {
+    // Add token if not already in the set
+    if (!tokens.includes(tokenId)) {
+      tokens.push(tokenId);
+    }
+  } else {
+    // Remove token if in the set
+    const index = tokens.indexOf(tokenId);
+    if (index > -1) {
+      tokens = tokens.slice(0, index).concat(tokens.slice(index + 1));
+    }
+  }
+
+  addressTokens.ownedTokens = tokens;
+  addressTokens.lastUpdated = blockTimestamp;
+  addressTokens.save();
 }
 
 export function handleApprovalForAll(event: ApprovalForAllEvent): void {
@@ -158,76 +173,137 @@ export function handleRoleRevoked(event: RoleRevokedEvent): void {
 
   entity.save()
 }
+// Helper function to handle token transfers and update conditions
+function handleTokenTransfer(
+  fromAddress: string,
+  toAddress: string,
+  tokenId: BigInt,
+  timestamp: BigInt
+): void {
+  // Skip non-Yoki tokens
+  if (tokenId.lt(NON_YOKI_BI)) {
+    return;
+  }
 
-export function handleTransferBatch(event: TransferBatchEvent): void {
-  let entity = new TransferBatch(
-    event.transaction.hash.concatI32(event.logIndex.toI32()),
-  )
-  entity.operator = event.params.operator
-  entity.from = event.params.from
-  entity.to = event.params.to
-  entity.ids = event.params.ids
-  entity.values = event.params.values
+  let updateFrom = false;
+  let updateTo = false;
 
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
+  // Handle token ownership updates for sender
+  if (fromAddress != ZERO_ADDRESS) {
+    updateAddressTokens(fromAddress, tokenId, false, timestamp);
+    updateFrom = true;
+  }
 
-  entity.save()
+  // Handle token ownership updates for receiver
+  if (toAddress != ZERO_ADDRESS) {
+    updateAddressTokens(toAddress, tokenId, true, timestamp);
+    updateTo = true;
+  }
+
+  // Only update season conditions if we processed valid tokens
+  if (updateFrom || updateTo) {
+    const season = getActiveSeason(timestamp);
+
+    // For season 7, check if the token is relevant before updating
+    const isSeason7Token = season == 7 && SEASON7_TOKENS.includes(tokenId);
+    const isOtherActiveSeason = season >= 8 && season <= 10;
+
+    // Update sender conditions if needed
+    if (updateFrom) {
+      if (isSeason7Token) {
+        updateSeason7Condition(fromAddress, timestamp);
+      } else if (isOtherActiveSeason) {
+        if (season == 8) updateSeason8Condition(fromAddress, timestamp);
+        else if (season == 9) updateSeason9Condition(fromAddress, timestamp);
+        else if (season == 10) updateSeason10Condition(fromAddress, timestamp);
+      }
+    }
+
+    // Update receiver conditions if needed
+    if (updateTo) {
+      if (isSeason7Token) {
+        updateSeason7Condition(toAddress, timestamp);
+      } else if (isOtherActiveSeason) {
+        if (season == 8) updateSeason8Condition(toAddress, timestamp);
+        else if (season == 9) updateSeason9Condition(toAddress, timestamp);
+        else if (season == 10) updateSeason10Condition(toAddress, timestamp);
+      }
+    }
+  }
 }
-// Handle transfer single event
+
 export function handleTransferSingle(event: TransferSingleEvent): void {
   let entity = new TransferSingle(
     event.transaction.hash.concatI32(event.logIndex.toI32()),
-  )
-  entity.tokenId = event.params.id
-  if(entity.tokenId < NON_YOKI_BI) {
+  );
+
+  entity.tokenId = event.params.id;
+  entity.operator = event.params.operator;
+  entity.from = event.params.from;
+  entity.to = event.params.to;
+  entity.value = event.params.value;
+  entity.blockNumber = event.block.number;
+  entity.blockTimestamp = event.block.timestamp;
+  entity.transactionHash = event.transaction.hash;
+
+  entity.save();
+
+  // Skip non-Yoki tokens early
+  if (event.params.id.lt(NON_YOKI_BI)) {
     return;
   }
-  entity.operator = event.params.operator
-  entity.from = event.params.from
-  entity.to = event.params.to
-  entity.value = event.params.value
 
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
+  const fromAddress = event.params.from.toHexString();
+  const toAddress = event.params.to.toHexString();
 
-  entity.save()
+  // Use new helper function
+  handleTokenTransfer(
+    fromAddress,
+    toAddress,
+    event.params.id,
+    event.block.timestamp
+  );
+}
 
+// For handleTransferBatch
+export function handleTransferBatch(event: TransferBatchEvent): void {
   const fromAddress = event.params.from.toHexString();
   const toAddress = event.params.to.toHexString();
   const timestamp = event.block.timestamp;
 
-  // Handle minting (from = 0x0)
-  if (fromAddress == ZERO_ADDRESS) {
-    updateTokenBalance(toAddress, event.params.id, event.params.value, timestamp);
+  // Process each token in the batch
+  for (let i = 0; i < event.params.ids.length; i++) {
+    const tokenId = event.params.ids[i];
+    const value = event.params.values[i];
 
-    // Update conditions for all seasons
-    const season = getActiveSeason(event.block.timestamp);
-    if (season == 7) updateSeason7Condition(toAddress, event.block.timestamp);
-    else if (season == 8) updateSeason8Condition(toAddress, event.block.timestamp);
-    else if (season == 9) updateSeason9Condition(toAddress, event.block.timestamp);
-    else if (season == 10) updateSeason10Condition(toAddress, event.block.timestamp);
+    // Skip non-Yoki tokens
+    if (tokenId.lt(NON_YOKI_BI)) {
+      continue;
+    }
 
-  }
-  // Handle burning (to = 0x0)
-  else if (toAddress == ZERO_ADDRESS) {
-    updateTokenBalance(fromAddress, event.params.id, event.params.value.neg(), timestamp);
+    // Create entity for the transfer
+    let entity = new TransferSingle(
+      event.transaction.hash.concatI32(event.logIndex.toI32()).concatI32(i)
+    );
 
-    // Update conditions for all seasons
-    const season = getActiveSeason(event.block.timestamp);
-    if (season == 7) updateSeason7Condition(fromAddress, event.block.timestamp);
-    else if (season == 8) updateSeason8Condition(fromAddress, event.block.timestamp);
-    else if (season == 9) updateSeason9Condition(fromAddress, event.block.timestamp);
-    else if (season == 10) updateSeason10Condition(fromAddress, event.block.timestamp);
+    entity.operator = event.params.operator;
+    entity.from = event.params.from;
+    entity.to = event.params.to;
+    entity.tokenId = tokenId;
+    entity.value = value;
+    entity.blockNumber = event.block.number;
+    entity.blockTimestamp = timestamp;
+    entity.transactionHash = event.transaction.hash;
 
-  }
-  // Handle transfers
-  else {
-    updateTokenBalance(fromAddress, event.params.id, event.params.value.neg(), timestamp);
-    updateTokenBalance(toAddress, event.params.id, event.params.value, timestamp);
+    entity.save();
 
+    // Use helper function for each token in batch
+    handleTokenTransfer(
+      fromAddress,
+      toAddress,
+      tokenId,
+      timestamp
+    );
   }
 }
 

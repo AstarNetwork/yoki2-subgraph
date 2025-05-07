@@ -1,6 +1,6 @@
 query checkSeason7Conditions {
   season7Conditions(
-      where: {
+    where: {
       hasAllRequiredTokens: true
     }
     first: 1000,
@@ -10,14 +10,5 @@ query checkSeason7Conditions {
     id
     address
     hasAllRequiredTokens
-    token100Balance
-    token101Balance
-    token200Balance
-    token201Balance
-    token300Balance
-    token301Balance
-    token400Balance
-    token401Balance
-    lastUpdated
   }
 }
