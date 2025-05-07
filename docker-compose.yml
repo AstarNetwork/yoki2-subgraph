@@ -2,7 +2,7 @@
 version: '3'
 services:
   graph-node:
-    image: graphprotocol/graph-node:latest
+    image: graphprotocol/graph-node:v0.30.0
     platform: linux/amd64  # Explicitly set platform
     ports:
       - '8000:8000'
@@ -13,6 +13,11 @@ services:
     depends_on:
       - ipfs
       - postgres
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8030/graphql"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
     environment:
       postgres_host: postgres
       postgres_user: graph-node
@@ -26,6 +31,7 @@ services:
       # Uncomment to enable IPFS file API for file data sources
       # GRAPH_IPFS_TIMEOUT: 3
       GRAPH_ALLOW_NON_DETERMINISTIC_IPFS: 'true'
+      GRAPH_GRAPHQL_DISABLE_PLAYGROUND: 'true'
 
   ipfs:
     image: ipfs/kubo:v0.17.0
@@ -53,3 +59,6 @@ services:
 
     volumes:
       - ./data/postgres:/data/postgres
+
+volumes:
+  ipfs_data:
