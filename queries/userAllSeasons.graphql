@@ -1,0 +1,51 @@
+query userAllSeasons($userAddress: String!) {
+  # Check Season 7 qualification
+  season7: season7Conditions(
+    where: {
+      id: $userAddress
+    }
+  ) {
+    hasAllRequiredTokens
+    lastUpdated
+  }
+  
+  # Check Season 8 qualification
+  season8: season8Conditions(
+    where: {
+      id: $userAddress
+    }
+  ) {
+    hasAllRequiredTokens
+    lastUpdated
+  }
+  
+  # Check Season 9 qualification
+  season9: season9Conditions(
+    where: {
+      id: $userAddress
+    }
+  ) {
+    hasAllRequiredTokens
+    lastUpdated
+  }
+  
+  # Check Season 10 qualification
+  season10: season10Conditions(
+    where: {
+      id: $userAddress
+    }
+  ) {
+    hasAllRequiredTokens
+    lastUpdated
+  }
+  
+  # Get all tokens owned by this user
+  tokens: addressTokens(
+    where: {
+      id: $userAddress
+    }
+  ) {
+    ownedTokens
+    lastUpdated
+  }
+}

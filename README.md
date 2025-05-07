@@ -1,6 +1,6 @@
-# Yoki2 Subgraph
+# Yoki2 Subgraph (Yoki Legacy)
 
-A subgraph for indexing and querying data from the Yoki NFT smart contracts on the Soneium network.
+A subgraph for indexing and querying data from the Yoki Legacy NFT smart contracts on the Soneium network.
 
 ## Overview
 
@@ -9,18 +9,23 @@ This subgraph tracks events from two smart contracts:
 - Yokis2 (Proxy contract)
 - YokiImplAtProxy (Implementation contract)
 
-It provides powerful GraphQL queries to fetch data about:
+It provides GraphQL queries to fetch data about:
 
 - Token transfers and balances
-- Special conditions for Season 7 tokens
+- Season qualification conditions (Seasons 7, 8, 9, and 10)
+- Token ownership tracking across multiple collections
 - Contract administration events
 
 ## Features
 
-- Tracks transfer events for NFT tokens
-- Maintains user token balances
-- Calculates Season 7 eligibility conditions based on token ownership
-- Records administrative events (roles, pausing, etc.)
+
+- Tracks transfer events for ERC1155 tokens
+- Maintains token ownership records using a set-based approach
+- Calculates seasonal eligibility conditions based on token ownership:
+  - Season 7 eligibility for all users
+  - Seasons 8, 9, and 10 with progressive qualification logic
+- Ensures users can only qualify for one season among Seasons 8, 9, or 10
+- Optimized for performance with minimal entity creation and storage
 
 ## Setup
 
@@ -64,7 +69,7 @@ yarn deploy-local
 To deploy to The Graph Studio:
 
 ```bash
-yarn deploy
+yarn deploy yoki2
 ```
 
 ## Query Examples

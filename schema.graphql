@@ -126,29 +126,25 @@ type AddressTokens @entity(immutable: false) {
 }
 
 type Season7Condition @entity(immutable: false) {
-  id: Bytes! # address as id
-  address: Bytes! # address
+  id: Bytes!                 # address as id
   hasAllRequiredTokens: Boolean!
   lastUpdated: BigInt!
 }
 
 type Season8Condition @entity(immutable: false) {
-  id: Bytes! # address as id
-  address: Bytes! # address
+  id: Bytes!                 # address as id
   hasAllRequiredTokens: Boolean!
   lastUpdated: BigInt!
 }
 
 type Season9Condition @entity(immutable: false) {
-  id: Bytes! # address as id
-  address: Bytes! # address
+  id: Bytes!                 # address as id
   hasAllRequiredTokens: Boolean!
   lastUpdated: BigInt!
 }
 
 type Season10Condition @entity(immutable: false) {
-  id: Bytes! # address as id
-  address: Bytes! # address
+  id: Bytes!                 # address as id
   hasAllRequiredTokens: Boolean!
   lastUpdated: BigInt!
 }

@@ -137,7 +137,6 @@ export function updateSeason7Condition(address: string, blockTimestamp: BigInt):
 		let conditions = Season7Condition.load(addressBytes);
 		if (!conditions) {
 			conditions = new Season7Condition(addressBytes);
-			conditions.address = addressBytes;
 		}
 
 		conditions.hasAllRequiredTokens = allTokensOwned;
@@ -167,7 +166,6 @@ export function updateSeason8Condition(address: string, blockTimestamp: BigInt):
 		let conditions = Season8Condition.load(addressBytes);
 		if (!conditions) {
 			conditions = new Season8Condition(addressBytes);
-			conditions.address = addressBytes;
 		}
 
 		conditions.hasAllRequiredTokens = allTokensOwned;
@@ -179,8 +177,14 @@ export function updateSeason8Condition(address: string, blockTimestamp: BigInt):
 // Season 9 functions
 export function updateSeason9Condition(address: string, blockTimestamp: BigInt): void {
 	const addressBytes = addressToBytes(address);
-	const addressTokens = AddressTokens.load(addressBytes);
 
+	// Skip Season 9 qualification if already qualified for Season 8
+	const season8 = Season8Condition.load(addressBytes);
+	if (season8 !== null && season8.hasAllRequiredTokens) {
+		return; // Already qualified for Season 8, no need to check Season 9
+	}
+
+	const addressTokens = AddressTokens.load(addressBytes);
 	if (!addressTokens) return;
 
 	// Check if all required tokens are owned
@@ -197,7 +201,6 @@ export function updateSeason9Condition(address: string, blockTimestamp: BigInt):
 		let conditions = Season9Condition.load(addressBytes);
 		if (!conditions) {
 			conditions = new Season9Condition(addressBytes);
-			conditions.address = addressBytes;
 		}
 
 		conditions.hasAllRequiredTokens = allTokensOwned;
@@ -209,8 +212,17 @@ export function updateSeason9Condition(address: string, blockTimestamp: BigInt):
 // Season 10 functions
 export function updateSeason10Condition(address: string, blockTimestamp: BigInt): void {
 	const addressBytes = addressToBytes(address);
-	const addressTokens = AddressTokens.load(addressBytes);
 
+	// Skip Season 10 qualification if already qualified for Season 8 or 9
+	const season8 = Season8Condition.load(addressBytes);
+	const season9 = Season9Condition.load(addressBytes);
+
+	if ((season8 !== null && season8.hasAllRequiredTokens) ||
+		(season9 !== null && season9.hasAllRequiredTokens)) {
+		return; // Already qualified for Season 8 or 9, no need to check Season 10
+	}
+
+	const addressTokens = AddressTokens.load(addressBytes);
 	if (!addressTokens) return;
 
 	// Check if all required tokens are owned
@@ -227,7 +239,6 @@ export function updateSeason10Condition(address: string, blockTimestamp: BigInt)
 		let conditions = Season10Condition.load(addressBytes);
 		if (!conditions) {
 			conditions = new Season10Condition(addressBytes);
-			conditions.address = addressBytes;
 		}
 
 		conditions.hasAllRequiredTokens = allTokensOwned;

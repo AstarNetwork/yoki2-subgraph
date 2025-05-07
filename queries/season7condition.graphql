@@ -7,8 +7,8 @@ query checkSeason7Conditions {
     orderBy: lastUpdated,
     orderDirection: desc
   ) {
-    id
-    address
+    id  # This is the address
     hasAllRequiredTokens
+    lastUpdated
   }
 }

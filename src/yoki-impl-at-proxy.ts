@@ -173,6 +173,7 @@ export function handleRoleRevoked(event: RoleRevokedEvent): void {
 
   entity.save()
 }
+
 // Helper function to handle token transfers and update conditions
 function handleTokenTransfer(
   fromAddress: string,
@@ -204,30 +205,26 @@ function handleTokenTransfer(
   if (updateFrom || updateTo) {
     const season = getActiveSeason(timestamp);
 
-    // For season 7, check if the token is relevant before updating
-    const isSeason7Token = season == 7 && SEASON7_TOKENS.includes(tokenId);
-    const isOtherActiveSeason = season >= 8 && season <= 10;
-
     // Update sender conditions if needed
     if (updateFrom) {
-      if (isSeason7Token) {
-        updateSeason7Condition(fromAddress, timestamp);
-      } else if (isOtherActiveSeason) {
-        if (season == 8) updateSeason8Condition(fromAddress, timestamp);
-        else if (season == 9) updateSeason9Condition(fromAddress, timestamp);
-        else if (season == 10) updateSeason10Condition(fromAddress, timestamp);
-      }
+      // Season 7 is always updated
+      if (season == 7) updateSeason7Condition(fromAddress, timestamp);
+
+      // For other seasons, update according to progressive rules
+      else if (season == 8) updateSeason8Condition(fromAddress, timestamp);
+      else if (season == 9) updateSeason9Condition(fromAddress, timestamp);
+      else if (season == 10) updateSeason10Condition(fromAddress, timestamp);
     }
 
     // Update receiver conditions if needed
     if (updateTo) {
-      if (isSeason7Token) {
-        updateSeason7Condition(toAddress, timestamp);
-      } else if (isOtherActiveSeason) {
-        if (season == 8) updateSeason8Condition(toAddress, timestamp);
-        else if (season == 9) updateSeason9Condition(toAddress, timestamp);
-        else if (season == 10) updateSeason10Condition(toAddress, timestamp);
-      }
+      // Season 7 is always updated
+      if (season == 7) updateSeason7Condition(toAddress, timestamp);
+
+      // For other seasons, update according to progressive rules
+      else if (season == 8) updateSeason8Condition(toAddress, timestamp);
+      else if (season == 9) updateSeason9Condition(toAddress, timestamp);
+      else if (season == 10) updateSeason10Condition(toAddress, timestamp);
     }
   }
 }
