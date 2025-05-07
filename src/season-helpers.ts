@@ -8,7 +8,7 @@ export const ONE_BI = BigInt.fromI32(1);
 
 // Season cutoff timestamps
 export const SEASON7_CUTOFF = BigInt.fromI32(1746104400);
-export const SEASON8_CUTOFF = BigInt.fromI32(1746190800); // test time
+export const SEASON8_CUTOFF = BigInt.fromI32(1746190800); // test time. Real time is 1746968400
 export const SEASON9_CUTOFF = BigInt.fromI32(1746277200); // test time
 export const SEASON10_CUTOFF = BigInt.fromI32(1746536400); // test time
 
@@ -67,8 +67,16 @@ export function addressToBytes(address: string): Bytes {
 	return Bytes.fromHexString(address);
 }
 
+export function getActiveSeason(timestamp: BigInt): number {
+  if (timestamp.le(SEASON7_CUTOFF)) return 7;
+  if (timestamp.le(SEASON8_CUTOFF)) return 8;
+  if (timestamp.le(SEASON9_CUTOFF)) return 9;
+  if (timestamp.le(SEASON10_CUTOFF)) return 10;
+  return 0; // No active season
+}
+
 // Check if a user has already qualified for a previous season (8 or 9)
-export function hasQualifiedForPreviousSeasons(address: Bytes, currentSeason: Number): boolean {
+export function hasQualifiedForPreviousSeasons(address: Bytes, currentSeason: i32): boolean {
 	if (currentSeason == 9) {
 		// For Season 9, check if qualified for Season 8
 		const season8 = Season8Condition.load(address);
@@ -392,7 +400,7 @@ function updateS9TokenBalances(conditions: Season9Condition, address: string): b
 		else if (tokenId.equals(TOKEN_1100)) conditions.token1100Balance = balance;
 		else if (tokenId.equals(TOKEN_1101)) conditions.token1101Balance = balance;
 		else if (tokenId.equals(TOKEN_1200)) conditions.token1200Balance = balance;
-		else if (tokenId.equals(BigInt.fromI32(1201)) conditions.token1201Balance = balance;
+		else if (tokenId.equals(TOKEN_1201)) conditions.token1201Balance = balance;
 
 		if (balance.equals(ZERO_BI)) {
 			allTokensOwned = false;
@@ -435,7 +443,7 @@ function updateS10TokenBalances(conditions: Season10Condition, address: string):
 		else if (tokenId.equals(TOKEN_1100)) conditions.token1100Balance = balance;
 		else if (tokenId.equals(TOKEN_1101)) conditions.token1101Balance = balance;
 		else if (tokenId.equals(TOKEN_1200)) conditions.token1200Balance = balance;
-		else if (tokenId.equals(BigInt.fromI32(1201)) conditions.token1201Balance = balance;
+		else if (tokenId.equals(TOKEN_1201)) conditions.token1201Balance = balance;
 
 		if (balance.equals(ZERO_BI)) {
 			allTokensOwned = false;
