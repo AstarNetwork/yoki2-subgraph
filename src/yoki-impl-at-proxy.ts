@@ -181,10 +181,6 @@ function handleTokenTransfer(
   tokenId: BigInt,
   timestamp: BigInt
 ): void {
-  // Skip non-Yoki tokens
-  if (tokenId.lt(NON_YOKI_BI)) {
-    return;
-  }
 
   let updateFrom = false;
   let updateTo = false;
@@ -235,6 +231,10 @@ export function handleTransferSingle(event: TransferSingleEvent): void {
   );
 
   entity.tokenId = event.params.id;
+  // Skip non-Yoki tokens early
+  if (event.params.id.lt(NON_YOKI_BI)) {
+    return;
+  }
   entity.operator = event.params.operator;
   entity.from = event.params.from;
   entity.to = event.params.to;
@@ -245,10 +245,6 @@ export function handleTransferSingle(event: TransferSingleEvent): void {
 
   entity.save();
 
-  // Skip non-Yoki tokens early
-  if (event.params.id.lt(NON_YOKI_BI)) {
-    return;
-  }
 
   const fromAddress = event.params.from.toHexString();
   const toAddress = event.params.to.toHexString();
