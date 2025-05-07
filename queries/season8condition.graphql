@@ -1,0 +1,39 @@
+query checkSeason8Conditions {
+  season8Conditions(
+    where: {
+      hasAllRequiredTokens: true
+    }
+    first: 1000,
+    orderBy: lastUpdated,
+    orderDirection: desc
+  ) {
+    id
+    address
+    hasAllRequiredTokens
+    token100Balance
+    token101Balance
+    token200Balance
+    token201Balance
+    token300Balance
+    token301Balance
+    token400Balance
+    token401Balance
+    token500Balance
+    token501Balance
+    token600Balance
+    token601Balance
+    token700Balance
+    token701Balance
+    token800Balance
+    token801Balance
+    token900Balance
+    token901Balance
+    token1000Balance
+    token1001Balance
+    token1100Balance
+    token1101Balance
+    token1200Balance
+    token1201Balance
+    lastUpdated
+  }
+}

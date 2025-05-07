@@ -141,3 +141,34 @@ type Season7Condition @entity(immutable: false) {
   token401Balance: BigInt!
   lastUpdated: BigInt!
 }
+
+type Season8Condition @entity(immutable: false) {
+  id: Bytes! # address as id
+  address: Bytes! # address
+  hasAllRequiredTokens: Boolean!
+  token100Balance: BigInt!
+  token101Balance: BigInt!
+  token200Balance: BigInt!
+  token201Balance: BigInt!
+  token300Balance: BigInt!
+  token301Balance: BigInt!
+  token400Balance: BigInt!
+  token401Balance: BigInt!
+  token500Balance: BigInt!
+  token501Balance: BigInt!
+  token600Balance: BigInt!
+  token601Balance: BigInt!
+  token700Balance: BigInt!
+  token701Balance: BigInt!
+  token800Balance: BigInt!
+  token801Balance: BigInt!
+  token900Balance: BigInt!
+  token901Balance: BigInt!
+  token1000Balance: BigInt!
+  token1001Balance: BigInt!
+  token1100Balance: BigInt!
+  token1101Balance: BigInt!
+  token1200Balance: BigInt!
+  token1201Balance: BigInt!
+  lastUpdated: BigInt!
+}
