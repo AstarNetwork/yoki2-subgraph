@@ -8,9 +8,9 @@ export const ONE_BI = BigInt.fromI32(1);
 
 // Season cutoff timestamps
 export const SEASON7_CUTOFF = BigInt.fromI32(1746104400);
-export const SEASON8_CUTOFF = BigInt.fromI32(1746190800); // test time. Real time is 1746968400
-export const SEASON9_CUTOFF = BigInt.fromI32(1746277200); // test time
-export const SEASON10_CUTOFF = BigInt.fromI32(1746536400); // test time
+export const SEASON8_CUTOFF = BigInt.fromI32(1746968400); // Sunday, May 11, 2025 1:00:00 PM
+export const SEASON9_CUTOFF = BigInt.fromI32(1747832400); // Wednesday, May 21, 2025 1:00:00 PM
+export const SEASON10_CUTOFF = BigInt.fromI32(1748610000); // May 30, 2025 1:00:00 PM
 
 // Constants for token IDs as BigInt - compute once and reuse
 export const TOKEN_100 = BigInt.fromI32(100);
