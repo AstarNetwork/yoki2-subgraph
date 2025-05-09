@@ -120,129 +120,118 @@ export function addressHasExistingCondition10(address: Bytes): boolean {
 export function updateSeason7Condition(address: string, blockTimestamp: BigInt): void {
 	const addressBytes = addressToBytes(address);
 	const addressTokens = AddressTokens.load(addressBytes);
-
+	
+	// Skip processing if there are no tokens for this address
 	if (!addressTokens) return;
-
+	
 	// Check if all required tokens are owned
 	let allTokensOwned = true;
 	for (let i = 0; i < SEASON7_TOKENS.length; i++) {
-		if (!addressTokens.ownedTokens.includes(SEASON7_TOKENS[i])) {
-			allTokensOwned = false;
-			break;
-		}
+	  if (!addressTokens.ownedTokens.includes(SEASON7_TOKENS[i])) {
+		allTokensOwned = false;
+		break;
+	  }
 	}
-
-	// Only create/update condition if tokens are owned or entity already exists
-	if (allTokensOwned || addressHasExistingCondition7(addressBytes)) {
-		let conditions = Season7Condition.load(addressBytes);
-		if (!conditions) {
-			conditions = new Season7Condition(addressBytes);
-		}
-
-		conditions.hasAllRequiredTokens = allTokensOwned;
-		conditions.lastUpdated = blockTimestamp;
-		conditions.save();
+	
+	// Only proceed if tokens are owned or entity already exists
+	let conditions = Season7Condition.load(addressBytes);
+	
+	// User qualifies and entity doesn't exist -> Create new entity with true
+	if (allTokensOwned && conditions === null) {
+	  conditions = new Season7Condition(addressBytes);
+	  conditions.hasAllRequiredTokens = true;
+	  conditions.lastUpdated = blockTimestamp;
+	  conditions.save();
+	  return;
 	}
 }
 
 // Season 8 functions
 export function updateSeason8Condition(address: string, blockTimestamp: BigInt): void {
-	const addressBytes = addressToBytes(address);
-	const addressTokens = AddressTokens.load(addressBytes);
-
-	if (!addressTokens) return;
-
-	// Check if all required tokens are owned
-	let allTokensOwned = true;
-	for (let i = 0; i < ALL_TOKENS.length; i++) {
-		if (!addressTokens.ownedTokens.includes(ALL_TOKENS[i])) {
-			allTokensOwned = false;
-			break;
-		}
-	}
-
-	// Only create/update condition if tokens are owned or entity already exists
-	if (allTokensOwned || addressHasExistingCondition8(addressBytes)) {
-		let conditions = Season8Condition.load(addressBytes);
-		if (!conditions) {
-			conditions = new Season8Condition(addressBytes);
-		}
-
-		conditions.hasAllRequiredTokens = allTokensOwned;
-		conditions.lastUpdated = blockTimestamp;
-		conditions.save();
-	}
+  const addressBytes = addressToBytes(address);
+  const addressTokens = AddressTokens.load(addressBytes);
+  
+  // Skip processing if there are no tokens for this address
+  if (!addressTokens) return;
+  
+  // Check if all required tokens are owned
+  let allTokensOwned = true;
+  for (let i = 0; i < ALL_TOKENS.length; i++) {
+    if (!addressTokens.ownedTokens.includes(ALL_TOKENS[i])) {
+      allTokensOwned = false;
+      break;
+    }
+  }
+  
+  // Only proceed if tokens are owned or entity already exists
+  let conditions = Season8Condition.load(addressBytes);
+  
+  // User qualifies and entity doesn't exist -> Create new entity with true
+  if (allTokensOwned && conditions === null) {
+    conditions = new Season8Condition(addressBytes);
+    conditions.hasAllRequiredTokens = true;
+    conditions.lastUpdated = blockTimestamp;
+    conditions.save();
+    return;
+  }
 }
 
 // Season 9 functions
 export function updateSeason9Condition(address: string, blockTimestamp: BigInt): void {
 	const addressBytes = addressToBytes(address);
-
-	// Skip Season 9 qualification if already qualified for Season 8
-	const season8 = Season8Condition.load(addressBytes);
-	if (season8 !== null && season8.hasAllRequiredTokens) {
-		return; // Already qualified for Season 8, no need to check Season 9
-	}
-
 	const addressTokens = AddressTokens.load(addressBytes);
+	
+	// Skip processing if there are no tokens for this address
 	if (!addressTokens) return;
-
+	
 	// Check if all required tokens are owned
 	let allTokensOwned = true;
 	for (let i = 0; i < ALL_TOKENS.length; i++) {
-		if (!addressTokens.ownedTokens.includes(ALL_TOKENS[i])) {
-			allTokensOwned = false;
-			break;
-		}
+	  if (!addressTokens.ownedTokens.includes(ALL_TOKENS[i])) {
+		allTokensOwned = false;
+		break;
+	  }
 	}
-
-	// Only create/update condition if tokens are owned or entity already exists
-	if (allTokensOwned || addressHasExistingCondition9(addressBytes)) {
-		let conditions = Season9Condition.load(addressBytes);
-		if (!conditions) {
-			conditions = new Season9Condition(addressBytes);
-		}
-
-		conditions.hasAllRequiredTokens = allTokensOwned;
-		conditions.lastUpdated = blockTimestamp;
-		conditions.save();
+	
+	// Only proceed if tokens are owned or entity already exists
+	let conditions = Season9Condition.load(addressBytes);
+	
+	// User qualifies and entity doesn't exist -> Create new entity with true
+	if (allTokensOwned && conditions === null) {
+	  conditions = new Season9Condition(addressBytes);
+	  conditions.hasAllRequiredTokens = true;
+	  conditions.lastUpdated = blockTimestamp;
+	  conditions.save();
+	  return;
 	}
-}
+  }
 
 // Season 10 functions
 export function updateSeason10Condition(address: string, blockTimestamp: BigInt): void {
 	const addressBytes = addressToBytes(address);
-
-	// Skip Season 10 qualification if already qualified for Season 8 or 9
-	const season8 = Season8Condition.load(addressBytes);
-	const season9 = Season9Condition.load(addressBytes);
-
-	if ((season8 !== null && season8.hasAllRequiredTokens) ||
-		(season9 !== null && season9.hasAllRequiredTokens)) {
-		return; // Already qualified for Season 8 or 9, no need to check Season 10
-	}
-
 	const addressTokens = AddressTokens.load(addressBytes);
+	
+	// Skip processing if there are no tokens for this address
 	if (!addressTokens) return;
-
+	
 	// Check if all required tokens are owned
 	let allTokensOwned = true;
 	for (let i = 0; i < ALL_TOKENS.length; i++) {
-		if (!addressTokens.ownedTokens.includes(ALL_TOKENS[i])) {
-			allTokensOwned = false;
-			break;
-		}
+	  if (!addressTokens.ownedTokens.includes(ALL_TOKENS[i])) {
+		allTokensOwned = false;
+		break;
+	  }
 	}
-
-	// Only create/update condition if tokens are owned or entity already exists
-	if (allTokensOwned || addressHasExistingCondition10(addressBytes)) {
-		let conditions = Season10Condition.load(addressBytes);
-		if (!conditions) {
-			conditions = new Season10Condition(addressBytes);
-		}
-
-		conditions.hasAllRequiredTokens = allTokensOwned;
-		conditions.lastUpdated = blockTimestamp;
-		conditions.save();
+	
+	// Only proceed if tokens are owned or entity already exists
+	let conditions = Season10Condition.load(addressBytes);
+	
+	// User qualifies and entity doesn't exist -> Create new entity with true
+	if (allTokensOwned && conditions === null) {
+	  conditions = new Season10Condition(addressBytes);
+	  conditions.hasAllRequiredTokens = true;
+	  conditions.lastUpdated = blockTimestamp;
+	  conditions.save();
+	  return;
 	}
-}
+  }
