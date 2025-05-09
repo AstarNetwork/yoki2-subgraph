@@ -121,7 +121,7 @@ type Unpaused @entity(immutable: true) {
 
 type AddressTokens @entity(immutable: false) {
   id: Bytes!                # address as id
-  ownedTokens: [BigInt!]!   # Array of owned token IDs
+  ownedTokens: [Int!]!   # Array of owned token IDs
   lastUpdated: BigInt!
 }
 

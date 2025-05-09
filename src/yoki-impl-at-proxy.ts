@@ -47,7 +47,7 @@ function addressToBytes(address: string): Bytes {
 }
 
 // Add/remove tokens from an address's set
-function updateAddressTokens(address: string, tokenId: BigInt, adding: boolean, blockTimestamp: BigInt): void {
+function updateAddressTokens(address: string, tokenId: i32, adding: boolean, blockTimestamp: BigInt): void {
   const addressBytes = addressToBytes(address);
   let addressTokens = AddressTokens.load(addressBytes);
 
@@ -184,16 +184,17 @@ function handleTokenTransfer(
 
   let updateFrom = false;
   let updateTo = false;
+  const tokenIdNumber = tokenId.toI32();
 
   // Handle token ownership updates for sender
   if (fromAddress != ZERO_ADDRESS) {
-    updateAddressTokens(fromAddress, tokenId, false, timestamp);
+    updateAddressTokens(fromAddress, tokenIdNumber, false, timestamp);
     updateFrom = true;
   }
 
   // Handle token ownership updates for receiver
   if (toAddress != ZERO_ADDRESS) {
-    updateAddressTokens(toAddress, tokenId, true, timestamp);
+    updateAddressTokens(toAddress, tokenIdNumber, true, timestamp);
     updateTo = true;
   }
 
