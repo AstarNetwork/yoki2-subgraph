@@ -119,25 +119,32 @@ type Unpaused @entity(immutable: true) {
   transactionHash: Bytes!
 }
 
-type TokenBalance @entity(immutable: false) {
-  id: String! # composite key: {owner}-{tokenId}
-  owner: Bytes! # address
-  tokenId: BigInt!
-  balance: BigInt!
+type AddressTokens @entity(immutable: false) {
+  id: Bytes!                # address as id
+  ownedTokens: [Int!]!   # Array of owned token IDs
   lastUpdated: BigInt!
 }
 
 type Season7Condition @entity(immutable: false) {
-  id: Bytes! # address as id
-  address: Bytes! # address
+  id: Bytes!                 # address as id
   hasAllRequiredTokens: Boolean!
-  token100Balance: BigInt!
-  token101Balance: BigInt!
-  token200Balance: BigInt!
-  token201Balance: BigInt!
-  token300Balance: BigInt!
-  token301Balance: BigInt!
-  token400Balance: BigInt!
-  token401Balance: BigInt!
+  lastUpdated: BigInt!
+}
+
+type Season8Condition @entity(immutable: false) {
+  id: Bytes!                 # address as id
+  hasAllRequiredTokens: Boolean!
+  lastUpdated: BigInt!
+}
+
+type Season9Condition @entity(immutable: false) {
+  id: Bytes!                 # address as id
+  hasAllRequiredTokens: Boolean!
+  lastUpdated: BigInt!
+}
+
+type Season10Condition @entity(immutable: false) {
+  id: Bytes!                 # address as id
+  hasAllRequiredTokens: Boolean!
   lastUpdated: BigInt!
 }

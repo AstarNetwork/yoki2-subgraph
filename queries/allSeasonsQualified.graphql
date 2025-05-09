@@ -1,0 +1,45 @@
+query allSeasonsQualified {
+  # Season 7 qualified users
+  season7: season7Conditions(
+    where: {
+      hasAllRequiredTokens: true
+    }
+    first: 1000
+  ) {
+    id  # This is the address
+    lastUpdated
+  }
+  
+  # Season 8 qualified users
+  season8: season8Conditions(
+    where: {
+      hasAllRequiredTokens: true
+    }
+    first: 1000
+  ) {
+    id  # This is the address
+    lastUpdated
+  }
+  
+  # Season 9 qualified users
+  season9: season9Conditions(
+    where: {
+      hasAllRequiredTokens: true
+    }
+    first: 1000
+  ) {
+    id  # This is the address
+    lastUpdated
+  }
+  
+  # Season 10 qualified users
+  season10: season10Conditions(
+    where: {
+      hasAllRequiredTokens: true
+    }
+    first: 1000
+  ) {
+    id  # This is the address
+    lastUpdated
+  }
+}

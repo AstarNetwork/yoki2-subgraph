@@ -1,24 +1,24 @@
-query checkSeason7Conditions {
+query checkSeason7Conditions($userAddress: String!) {
   season7Conditions(
-      where: {
+    where: {
+      id: $userAddress,
       hasAllRequiredTokens: true
-      address: "0xc779ceb0853fa7ab6a38c587c1cfc702e4603d9b"
     }
-    first: 100,
-    orderBy: lastUpdated,
-    orderDirection: desc
+    first: 1
   ) {
     id
-    address
     hasAllRequiredTokens
-    token100Balance
-    token101Balance
-    token200Balance
-    token201Balance
-    token300Balance
-    token301Balance
-    token400Balance
-    token401Balance
+    lastUpdated
+  }
+  
+  # Also get the tokens the user owns
+  addressTokens(where: { id: $userAddress }) {
+    ownedTokens
     lastUpdated
   }
 }
+
+# To use this query, provide the user's address as a variable:
+# {
+#  "userAddress": "0xc779ceb0853fa7ab6a38c587c1cfc702e4603d9b"
+# }

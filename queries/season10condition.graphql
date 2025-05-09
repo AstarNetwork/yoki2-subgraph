@@ -1,5 +1,5 @@
-query checkSeason7Conditions {
-  season7Conditions(
+query checkSeason10Conditions {
+  season10Conditions(
     where: {
       hasAllRequiredTokens: true
     }
