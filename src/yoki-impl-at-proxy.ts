@@ -39,6 +39,7 @@ const getYokiEntry = (
   if (!yokiPerSeason) {
     yokiPerSeason = createYokiPerSeason(address, season);
   }
+
   return yokiPerSeason;
 };
 
@@ -60,22 +61,23 @@ export const handleYokiPerSeason = (
     return;
   }
 
-  const key = getAggregateKey(from.toHexString(), season.id);
-  let yokiPerSeason = YokiPerSeason.load(key);
-  if (!yokiPerSeason) {
-    yokiPerSeason = createYokiPerSeason(from.toHexString(), season);
-  }
+  let yokiPerSeason: YokiPerSeason | null = null;
 
-  if (fromStr !== ZERO_ADDRESS) {
-    const aggregate = getYokiEntry(fromStr, season);
-    aggregate.ownedYokis[yokiIndex] -= valueNumber;
+  if (fromStr != ZERO_ADDRESS) {
+    yokiPerSeason = getYokiEntry(fromStr, season);
+    let currentValue = yokiPerSeason.ownedYokis[yokiIndex];
+    yokiPerSeason.ownedYokis[yokiIndex] = currentValue - valueNumber;
+    yokiPerSeason.hasAll = hasAllYokis(yokiPerSeason.ownedYokis);
+    yokiPerSeason.save();
   }
-  if (toStr !== ZERO_ADDRESS) {
-    const aggregate = getYokiEntry(toStr, season);
-    aggregate.ownedYokis[yokiIndex] += valueNumber;
+  
+  if (toStr != ZERO_ADDRESS) {
+    yokiPerSeason = getYokiEntry(toStr, season);
+    let currentValue = yokiPerSeason.ownedYokis[yokiIndex];
+    yokiPerSeason.ownedYokis[yokiIndex] = currentValue + valueNumber;
+    yokiPerSeason.hasAll = hasAllYokis(yokiPerSeason.ownedYokis);
+    yokiPerSeason.save();
   }
-
-  yokiPerSeason.save();
 }
 
 export function handleTransferSingle(event: TransferSingleEvent): void {
