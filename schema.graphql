@@ -1,95 +1,3 @@
-type AdminChanged @entity(immutable: true) {
-  id: Bytes!
-  previousAdmin: Bytes! # address
-  newAdmin: Bytes! # address
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type Upgraded @entity(immutable: true) {
-  id: Bytes!
-  implementation: Bytes! # address
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-type ApprovalForAll @entity(immutable: true) {
-  id: Bytes!
-  account: Bytes! # address
-  operator: Bytes! # address
-  approved: Boolean! # bool
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type ContractURIUpdated @entity(immutable: true) {
-  id: Bytes!
-
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type Initialized @entity(immutable: true) {
-  id: Bytes!
-  version: BigInt! # uint64
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type Paused @entity(immutable: true) {
-  id: Bytes!
-  account: Bytes! # address
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type RoleAdminChanged @entity(immutable: true) {
-  id: Bytes!
-  role: Bytes! # bytes32
-  previousAdminRole: Bytes! # bytes32
-  newAdminRole: Bytes! # bytes32
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type RoleGranted @entity(immutable: true) {
-  id: Bytes!
-  role: Bytes! # bytes32
-  account: Bytes! # address
-  sender: Bytes! # address
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type RoleRevoked @entity(immutable: true) {
-  id: Bytes!
-  role: Bytes! # bytes32
-  account: Bytes! # address
-  sender: Bytes! # address
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type TransferBatch @entity(immutable: true) {
-  id: Bytes!
-  operator: Bytes! # address
-  from: Bytes! # address
-  to: Bytes! # address
-  ids: [BigInt!]! # uint256[]
-  values: [BigInt!]! # uint256[]
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
 type TransferSingle @entity(immutable: true) {
   id: Bytes!
   operator: Bytes! # address
@@ -100,44 +8,14 @@ type TransferSingle @entity(immutable: true) {
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
+  season: Int!
 }
 
-type URI @entity(immutable: true) {
-  id: Bytes!
-  value: String! # string
-  tokenId: BigInt! # uint256
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
 
-type Unpaused @entity(immutable: true) {
-  id: Bytes!
-  account: Bytes! # address
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type TokenBalance @entity(immutable: false) {
-  id: String! # composite key: {owner}-{tokenId}
-  owner: Bytes! # address
-  tokenId: BigInt!
-  balance: BigInt!
-  lastUpdated: BigInt!
-}
-
-type Season7Condition @entity(immutable: false) {
-  id: Bytes! # address as id
-  address: Bytes! # address
-  hasAllRequiredTokens: Boolean!
-  token100Balance: BigInt!
-  token101Balance: BigInt!
-  token200Balance: BigInt!
-  token201Balance: BigInt!
-  token300Balance: BigInt!
-  token301Balance: BigInt!
-  token400Balance: BigInt!
-  token401Balance: BigInt!
-  lastUpdated: BigInt!
+type YokiPerSeason @entity {
+  id: ID!
+  address: String! @index
+  season: Int! @index
+  ownedYokis: [Int!]!
+  hasAll: Boolean!
 }

@@ -37,41 +37,13 @@ dataSources:
       apiVersion: 0.0.8
       language: wasm/assemblyscript
       entities:
-        - ApprovalForAll
-        - ContractURIUpdated
-        - Initialized
-        - Paused
-        - RoleAdminChanged
-        - RoleGranted
-        - RoleRevoked
-        - TransferBatch
         - TransferSingle
-        - URI
-        - Unpaused
+        - YokiPerSeason
       abis:
         - name: YokiImpl
           file: ./abis/YokiImpl.json
       eventHandlers:
-        - event: ApprovalForAll(indexed address,indexed address,bool)
-          handler: handleApprovalForAll
-        - event: ContractURIUpdated()
-          handler: handleContractURIUpdated
-        - event: Initialized(uint64)
-          handler: handleInitialized
-        - event: Paused(address)
-          handler: handlePaused
-        - event: RoleAdminChanged(indexed bytes32,indexed bytes32,indexed bytes32)
-          handler: handleRoleAdminChanged
-        - event: RoleGranted(indexed bytes32,indexed address,indexed address)
-          handler: handleRoleGranted
-        - event: RoleRevoked(indexed bytes32,indexed address,indexed address)
-          handler: handleRoleRevoked
-        - event: TransferBatch(indexed address,indexed address,indexed address,uint256[],uint256[])
-          handler: handleTransferBatch
         - event: TransferSingle(indexed address,indexed address,indexed address,uint256,uint256)
           handler: handleTransferSingle
-        - event: URI(string,indexed uint256)
-          handler: handleURI
-        - event: Unpaused(address)
-          handler: handleUnpaused
+
       file: ./src/yoki-impl-at-proxy.ts
